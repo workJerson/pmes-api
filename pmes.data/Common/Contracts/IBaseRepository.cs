@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace pmes.data.Common
+namespace pmes.data.Common.Contracts
 {
     public interface IBaseRepository<T>
     {

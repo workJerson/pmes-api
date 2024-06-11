@@ -80,9 +80,9 @@ try
     });
 
     #region Services
-    builder.Services.AddCore();
-    builder.Services.AddData();
-    builder.Services.AddEntity(connectionString);
+    builder.Services.AddCore(configuration);
+    builder.Services.AddData(configuration);
+    builder.Services.AddEntity(configuration);
     #endregion
 
     var app = builder.Build();

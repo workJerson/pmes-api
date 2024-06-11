@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using pmes.data.Common.Contracts;
 using pmes.entity.Context;
 using System;
 using System.Collections.Generic;
