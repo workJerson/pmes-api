@@ -10,7 +10,7 @@ namespace pmes.entity
         public static IServiceCollection AddEntity(this IServiceCollection services, IConfigurationRoot configuration)
         {
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
-            services.AddDbContext<PmesContext>(
+            services.AddDbContext<DatabaseContext>(
                         dbContextOptions => dbContextOptions
                         .UseMySql(configuration["Database:ConnectionString"]!, serverVersion)
                         .EnableDetailedErrors()

@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace pmes.data.Common
 {
-    public class BaseRepository<T>(PmesContext context) : IBaseRepository<T> where T : class
+    public class BaseRepository<T>(DatabaseContext context) : IBaseRepository<T> where T : class
     {
         public string[] Searchable = [];
-        private readonly PmesContext _context = context;
+        private readonly DatabaseContext _context = context;
         private readonly DbSet<T> _entities = context.Set<T>();
 
         public virtual async Task<(T, bool)> CreateAsync(T entity)

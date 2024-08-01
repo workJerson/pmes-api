@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace pmes.entity.Context
 {
-    public partial class PmesContext
+    public partial class DatabaseContext
     {
         public Task<int> SaveChangesAsync()
         {
@@ -19,7 +18,7 @@ namespace pmes.entity.Context
 
         private void UpdateAuditEntities(dynamic type = null, string userName = null)
         {
-            var username = contextAccessor?.HttpContext?.User?.Claims.FirstOrDefault(x => x.Type == "cognito:username")?.Value;
+            var username = httpContextAccessor?.HttpContext?.User?.Claims.FirstOrDefault(x => x.Type == "cognito:username")?.Value;
             username ??= userName;
 
             // https://medium.com/@unhandlederror/deleting-it-softly-with-ef-core-5f191db5cf72
