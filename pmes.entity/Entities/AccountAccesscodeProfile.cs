@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace pmes.entity.Entities;
 
-public partial class AccountAccesscodeProfile
+public partial class AccountAccessCodeProfile
 {
     public int AccountId { get; set; }
 
@@ -30,4 +30,6 @@ public partial class AccountAccesscodeProfile
     public DateTime? DeletedOn { get; set; }
 
     public virtual AccessCodeProfile AccessCodeProfile { get; set; } = null!;
+
+    public virtual AccountInfo Account { get; set; } = null!;
 }

@@ -35,7 +35,7 @@ public partial class AccessCodeProfile
 
     public virtual ICollection<AccessCodeProfilePermission> AccessCodeProfilePermissions { get; set; } = new List<AccessCodeProfilePermission>();
 
-    public virtual ICollection<AccountAccesscodeProfile> AccountAccesscodeProfiles { get; set; } = new List<AccountAccesscodeProfile>();
+    public virtual ICollection<AccountAccessCodeProfile> AccountAccessCodeProfiles { get; set; } = new List<AccountAccessCodeProfile>();
 
     public virtual Project Project { get; set; } = null!;
 }

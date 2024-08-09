@@ -31,5 +31,7 @@ public partial class AccessPoint
 
     public DateTime? DeletedOn { get; set; }
 
+    public virtual ICollection<AccessCodeProfilePermission> AccessCodeProfilePermissions { get; set; } = new List<AccessCodeProfilePermission>();
+
     public virtual Property Property { get; set; } = null!;
 }

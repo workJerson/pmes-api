@@ -22,7 +22,9 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<AccessPoint> AccessPoints { get; set; }
 
-    public virtual DbSet<AccountAccesscodeProfile> AccountAccesscodeProfiles { get; set; }
+    public virtual DbSet<AccountAccessCodeProfile> AccountAccessCodeProfiles { get; set; }
+
+    public virtual DbSet<AccountInfo> AccountInfos { get; set; }
 
     public virtual DbSet<Project> Projects { get; set; }
 
@@ -34,9 +36,7 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<StatusPerCategory> StatusPerCategories { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=127.0.0.1;port=30079;database=develop-pmes;user=userCy;password=7opgyzqTk3KbFI0EpT6ZTk3KbFI0erpTTq2zp5R4n;allow user variables=True;sslmode=Required", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
+    public virtual DbSet<VwStatusPerCategory> VwStatusPerCategories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -110,6 +110,11 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.AccessCodeProfileId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("accesscodeprofilepermission_FK_1");
+
+            entity.HasOne(d => d.AccessPoints).WithMany(p => p.AccessCodeProfilePermissions)
+                .HasForeignKey(d => d.AccessPointsId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("accesscodeprofilepermission_FK");
         });
 
         modelBuilder.Entity<AccessPoint>(entity =>
@@ -148,11 +153,11 @@ public partial class DatabaseContext : DbContext
                 .HasConstraintName("accesspoints_FK");
         });
 
-        modelBuilder.Entity<AccountAccesscodeProfile>(entity =>
+        modelBuilder.Entity<AccountAccessCodeProfile>(entity =>
         {
             entity.HasKey(e => e.AccountAccessCodeProfileId).HasName("PRIMARY");
 
-            entity.ToTable("AccountAccesscodeProfile");
+            entity.ToTable("AccountAccessCodeProfile");
 
             entity.HasIndex(e => e.AccountId, "accountaccesscodeprofile_FK");
 
@@ -176,10 +181,65 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.UpdatedBy).HasMaxLength(50);
             entity.Property(e => e.UpdatedOn).HasMaxLength(6);
 
-            entity.HasOne(d => d.AccessCodeProfile).WithMany(p => p.AccountAccesscodeProfiles)
+            entity.HasOne(d => d.AccessCodeProfile).WithMany(p => p.AccountAccessCodeProfiles)
                 .HasForeignKey(d => d.AccessCodeProfileId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("accountaccesscodeprofile_FK_1");
+
+            entity.HasOne(d => d.Account).WithMany(p => p.AccountAccessCodeProfiles)
+                .HasForeignKey(d => d.AccountId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("accountaccesscodeprofile_FK");
+        });
+
+        modelBuilder.Entity<AccountInfo>(entity =>
+        {
+            entity.HasKey(e => e.AccountId).HasName("PRIMARY");
+
+            entity.ToTable("AccountInfo");
+
+            entity.HasIndex(e => e.AccountTypeCode, "Account_FK");
+
+            entity.HasIndex(e => e.AccountCode, "Account_customerCode_IDX").IsUnique();
+
+            entity.Property(e => e.AccountCode).HasMaxLength(100);
+            entity.Property(e => e.AccountName).HasMaxLength(50);
+            entity.Property(e => e.AccountTypeCode).HasMaxLength(10);
+            entity.Property(e => e.AccountTypeName).HasMaxLength(150);
+            entity.Property(e => e.AddressLine).HasMaxLength(255);
+            entity.Property(e => e.CityName).HasMaxLength(100);
+            entity.Property(e => e.CountryIsoCode2).HasMaxLength(2);
+            entity.Property(e => e.CountryName).HasMaxLength(100);
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("'ADMIN'");
+            entity.Property(e => e.CreatedOn)
+                .HasMaxLength(6)
+                .HasDefaultValueSql("utc_timestamp(3)");
+            entity.Property(e => e.DeletedBy).HasMaxLength(50);
+            entity.Property(e => e.DeletedOn).HasMaxLength(6);
+            entity.Property(e => e.EmailAddress).HasMaxLength(150);
+            entity.Property(e => e.FullAddress).HasMaxLength(250);
+            entity.Property(e => e.Guid)
+                .HasDefaultValueSql("uuid()")
+                .UseCollation("ascii_general_ci")
+                .HasCharSet("ascii");
+            entity.Property(e => e.ImageUrl).HasMaxLength(1000);
+            entity.Property(e => e.IsActive)
+                .IsRequired()
+                .HasDefaultValueSql("'1'");
+            entity.Property(e => e.Latitude).HasMaxLength(50);
+            entity.Property(e => e.Longitude).HasMaxLength(50);
+            entity.Property(e => e.PostalCode).HasMaxLength(10);
+            entity.Property(e => e.RegionId).HasMaxLength(36);
+            entity.Property(e => e.RegionName).HasMaxLength(100);
+            entity.Property(e => e.StateName).HasMaxLength(100);
+            entity.Property(e => e.TownBaranggay).HasMaxLength(150);
+            entity.Property(e => e.UpdatedBy).HasMaxLength(50);
+            entity.Property(e => e.UpdatedOn).HasMaxLength(6);
+            entity.Property(e => e.WebsiteUrl)
+                .HasMaxLength(150)
+                .HasColumnName("WebsiteURL");
         });
 
         modelBuilder.Entity<Project>(entity =>
@@ -372,6 +432,19 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.StatusCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("StatusPerCategory_FK");
+        });
+
+        modelBuilder.Entity<VwStatusPerCategory>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vwStatusPerCategory");
+
+            entity.Property(e => e.StatusCategoryCode).HasMaxLength(10);
+            entity.Property(e => e.StatusCategoryName).HasMaxLength(150);
+            entity.Property(e => e.StatusCode).HasMaxLength(10);
+            entity.Property(e => e.StatusName).HasMaxLength(150);
+            entity.Property(e => e.StatusPerCategoryCode).HasMaxLength(20);
         });
 
         OnModelCreatingPartial(modelBuilder);

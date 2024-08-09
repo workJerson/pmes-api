@@ -30,4 +30,6 @@ public partial class AccessCodeProfilePermission
     public DateTime? DeletedOn { get; set; }
 
     public virtual AccessCodeProfile AccessCodeProfile { get; set; } = null!;
+
+    public virtual AccessPoint AccessPoints { get; set; } = null!;
 }
