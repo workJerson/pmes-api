@@ -15,7 +15,7 @@ using System.Text.Json;
 
 
 //$env:ASPNETCORE_ENVIRONMENT='local'
-//Scaffold-dbContext "server=127.0.0.1; port=30079; database=develop-pmes; user=userCy; password=7opgyzqTk3KbFI0EpT6ZTk3KbFI0erpTTq2zp5R4n; Allow User Variables=True;SslMode=Required" Pomelo.EntityFrameworkCore.MySql -OutputDir Entities -ContextDir Context -Context DatabaseContext -f
+//Scaffold-dbContext "server=127.0.0.1; port=5000; database=develop-pmes; user=userPMES; password=1cKerWOnjmX8QnjmX8Q92OPcY32s7ea3rDNrTUVb; Allow User Variables=True;SslMode=Required" Pomelo.EntityFrameworkCore.MySql -OutputDir Entities -ContextDir Context -Context DatabaseContext -f
 
 StaticLogger.EnsureInitialized();
 Log.Information("Server Booting Up...");
